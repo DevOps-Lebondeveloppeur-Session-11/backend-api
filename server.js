@@ -43,6 +43,11 @@ app.get("/hello", (req, res) => {
   res.send("Hello Le bon developpeur Community !");
 });
 
+
+app.get("/test", (req, res) => {
+  res.send("c'est un test!");
+});
+
 app.get("/health", async (req, res) => {
   const start = Date.now();
   try {
