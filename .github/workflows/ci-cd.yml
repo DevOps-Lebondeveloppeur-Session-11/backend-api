@@ -55,3 +55,19 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ env.IMAGE_NAME }}
+
+  deploy-job:
+    needs: build-and-push-job
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Connect to the VPS using SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+
+              # Pull the latest Docker image
+              sudo docker pull ${{ env.IMAGE_NAME }}
