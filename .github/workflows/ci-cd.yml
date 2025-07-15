@@ -61,9 +61,27 @@ jobs:
           trivy image ${{ env.IMAGE_NAME }}
  
 
+ # ✅ Vulnerability Scanning (Snyk)
+  snyk-code-security-scan-job:
+    runs-on: ubuntu-latest
+    needs: [unit-test-job]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependency Scanning Tool (Snyk)?.
+        run: npm install -g snyk
+
+      - name: Snyk Authentication
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk Vulnerability Scan
+        run: snyk monitor --org=assidiwassim
+
+
   # ✅ Build and Push Docker Image
   build-and-push-job:
-    needs: [trivy-image-security-scan-job]
+    needs: [trivy-image-security-scan-job, snyk-code-security-scan-job]
     runs-on: ubuntu-latest
     steps:
 
